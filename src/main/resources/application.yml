@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: EcoEV
+  data:
+    mongodb:
+      database: EcoEV
+      uri: "mongodb+srv://hjha9999:hjha9999@cluster0.kpqp2hw.mongodb.net/?retryWrites=true&w=majority"
