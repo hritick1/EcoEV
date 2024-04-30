@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 @Data
@@ -12,8 +13,6 @@ import java.io.Serializable;
 public class EvAllInOne implements Serializable {
     @Id
     private String name;
-
-    private String id;
 
     private int totalIncome;
 
