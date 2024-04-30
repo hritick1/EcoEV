@@ -2,6 +2,8 @@ package com.system.EcoEV.services.impl;
 
 import com.system.EcoEV.dto.EvDailyFinancesDto;
 import com.system.EcoEV.entities.EvAllInOne;
+import com.system.EcoEV.entities.EvDailyFinances;
+import com.system.EcoEV.entities.EvMaintenance;
 import com.system.EcoEV.exception.CollectionNotFoundException;
 import com.system.EcoEV.repo.EvAllInOneRepo;
 import com.system.EcoEV.repo.EvDailyRepo;
@@ -26,13 +28,54 @@ public class EvServiceImpl implements EvService {
 
     @Override
     public String addEveryDayCollection(EvDailyFinancesDto evDailyFinancesDto, String name) {
+        //remove only for 1st use
+        EvAllInOne evAllInOne1=new EvAllInOne();
+        evAllInOne1.setName(name);
+        evAllInOneRepo.save(evAllInOne1);
 
+        EvAllInOne evAllInOne = evAllInOneRepo.findById(name).orElseThrow(() -> new CollectionNotFoundException("Collection not found with name: " + name));
+        EvDailyFinances evDailyFinances = new EvDailyFinances();
+        evDailyFinances.setName(name);
+        evDailyFinances.setDate(CommonUtils.getCurrentDate(new Date()));
+        //setting Due
+        int dailyPay = evDailyFinancesDto.getDailyPay();
+        int due = findAllDue(name);
+        int paid=0;
+        if (dailyPay > 200) {
+            evDailyFinances.setDailyPay(200);
+            paid=200;
+            evAllInOne.setTotalDue(due - (dailyPay - 200));
+        } else if (dailyPay < 200) {
+            evAllInOne.setTotalDue(due + 200 - dailyPay);
+            paid=dailyPay;
+        } else{
+            evDailyFinances.setDailyPay(200);
+        paid=200;
+        }
+        //Setting maintenance
+        EvMaintenance evMaintenance = new EvMaintenance();
+        if (evDailyFinancesDto.getPartsAdded() != null) {
+            evMaintenance.setCostOfService(evDailyFinancesDto.getMaintenance());
+            evMaintenance.setDate(CommonUtils.getCurrentDate(new Date()));
+            evMaintenance.setPartName(evDailyFinancesDto.getPartsAdded());
+            evMaintenance.setName(name);
+            evMaintenanceRepo.save(evMaintenance);
+        }
+        //Setting all in one
+        evAllInOne.setDate(CommonUtils.getCurrentDate(new Date()));
+        evAllInOne.setTotalIncome(evAllInOne.getTotalIncome() + dailyPay);
+        evAllInOne.setTotalServiceCost(evAllInOne.getTotalServiceCost() + evDailyFinancesDto.getMaintenance());
+        evAllInOne.setName(name);
 
-        return null;
+        evDailyRepo.save(evDailyFinances);
+        evAllInOneRepo.save(evAllInOne);
+
+        return "Daily Paid: " + paid;
     }
 
+
     @Override
-    public int findAllDue(String name){
+    public int findAllDue(String name) {
         log.info(name);
         EvAllInOne evAllInOne = evAllInOneRepo.findById(name).orElseThrow(() -> new CollectionNotFoundException("Collection not found with name: " + name));
         log.info(name);
@@ -52,10 +95,10 @@ public class EvServiceImpl implements EvService {
 
     @Override
     public String getDueDates(String name) {
-        String currentDate=CommonUtils.getCurrentDate(new Date());
-        EvAllInOne evAllInOne=evAllInOneRepo.findById(name).orElseThrow(()->new CollectionNotFoundException("Collection not found with name: "+name));
-        String givenDate=evAllInOne.getDate();
-        return "Due From "+(Integer.parseInt(givenDate.substring(8,10))+1)+"-"+givenDate.substring(5,7)+" to "+currentDate.substring(8,10)+"-"+currentDate.substring(5,7)+" Amount:";
+        String currentDate = CommonUtils.getCurrentDate(new Date());
+        EvAllInOne evAllInOne = evAllInOneRepo.findById(name).orElseThrow(() -> new CollectionNotFoundException("Collection not found with name: " + name));
+        String givenDate = evAllInOne.getDate();
+        return "Due From " + (Integer.parseInt(givenDate.substring(8, 10)) + 1) + "-" + givenDate.substring(5, 7) + " to " + currentDate.substring(8, 10) + "-" + currentDate.substring(5, 7) + " Amount:";
     }
 }
 

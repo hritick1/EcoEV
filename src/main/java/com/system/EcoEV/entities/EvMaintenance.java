@@ -12,6 +12,7 @@ public class EvMaintenance implements Serializable {
     @Id
     private String id;
     private String name;
+    private String partName;
     private int costOfService;
     private String date;
 
