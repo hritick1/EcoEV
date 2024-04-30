@@ -37,8 +37,8 @@ public class EvController {
         return evAllInOneRepo.findById(name);
     }
     @GetMapping("/getDue/{name}")
-    private int getDue(@PathVariable String name) {
+    private String getDue(@PathVariable String name) {
         log.info("{}",name);
-        return evService.findAllDue(name);
+        return evService.getDueDates(name)+evService.findAllDue(name);
     }
 }

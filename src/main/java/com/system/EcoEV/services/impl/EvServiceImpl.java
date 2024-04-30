@@ -1,12 +1,8 @@
 package com.system.EcoEV.services.impl;
 
 import com.system.EcoEV.dto.EvDailyFinancesDto;
-import com.system.EcoEV.dto.EvMaintenanceDto;
 import com.system.EcoEV.entities.EvAllInOne;
-import com.system.EcoEV.entities.EvDailyFinances;
-import com.system.EcoEV.entities.EvDue;
 import com.system.EcoEV.exception.CollectionNotFoundException;
-import com.system.EcoEV.mapper.DtoToEntityMapper;
 import com.system.EcoEV.repo.EvAllInOneRepo;
 import com.system.EcoEV.repo.EvDailyRepo;
 import com.system.EcoEV.repo.EvMaintenanceRepo;
@@ -16,10 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -56,4 +49,15 @@ public class EvServiceImpl implements EvService {
 
         return evAllInOne.getTotalDue();
     }
+
+    @Override
+    public String getDueDates(String name) {
+        String currentDate=CommonUtils.getCurrentDate(new Date());
+        EvAllInOne evAllInOne=evAllInOneRepo.findById(name).orElseThrow(()->new CollectionNotFoundException("Collection not found with name: "+name));
+        String givenDate=evAllInOne.getDate();
+        return "Due From "+givenDate.substring(8,10)+"-"+givenDate.substring(5,7)+" to "+currentDate.substring(8,10)+"-"+currentDate.substring(5,7)+" Amount:";
+    }
 }
+
+//yyyy-mm-dd
+//0123456789
