@@ -28,10 +28,6 @@ public class EvServiceImpl implements EvService {
 
     @Override
     public String addEveryDayCollection(EvDailyFinancesDto evDailyFinancesDto, String name) {
-        //remove only for 1st use
-        EvAllInOne evAllInOne1=new EvAllInOne();
-        evAllInOne1.setName(name);
-        evAllInOneRepo.save(evAllInOne1);
 
         EvAllInOne evAllInOne = evAllInOneRepo.findById(name).orElseThrow(() -> new CollectionNotFoundException("Collection not found with name: " + name));
         EvDailyFinances evDailyFinances = new EvDailyFinances();
