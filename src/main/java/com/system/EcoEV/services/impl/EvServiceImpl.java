@@ -55,7 +55,7 @@ public class EvServiceImpl implements EvService {
         String currentDate=CommonUtils.getCurrentDate(new Date());
         EvAllInOne evAllInOne=evAllInOneRepo.findById(name).orElseThrow(()->new CollectionNotFoundException("Collection not found with name: "+name));
         String givenDate=evAllInOne.getDate();
-        return "Due From "+givenDate.substring(8,10)+"-"+givenDate.substring(5,7)+" to "+currentDate.substring(8,10)+"-"+currentDate.substring(5,7)+" Amount:";
+        return "Due From "+(Integer.parseInt(givenDate.substring(8,10))+1)+"-"+givenDate.substring(5,7)+" to "+currentDate.substring(8,10)+"-"+currentDate.substring(5,7)+" Amount:";
     }
 }
 
