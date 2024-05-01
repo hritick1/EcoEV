@@ -28,9 +28,9 @@ public class EvController {
     @Autowired
     private EvAllInOneRepo evAllInOneRepo;
 
-    @GetMapping("/")
-    private int getDate() {
-        return CommonUtils.calculateTotalDate("2024-01-00");
+    @GetMapping("/{mm}")
+    private boolean getDate(@PathVariable int mm) {
+        return CommonUtils.isLastDayOfMonth("2024-02-29");
     }
 
     @PostMapping("/addDaily/{name}")
@@ -70,5 +70,9 @@ public class EvController {
         evDailyFinancesDto.setName(name);
         evDailyFinancesDto.setDailyPay(dailyPay);
         return evService.addEveryDayCollection(evDailyFinancesDto,name);
+    }
+    @GetMapping("/getMonthly/{monthName}/{name}")
+    private String getMonthlyDetails(@PathVariable String monthName,@PathVariable String name){
+        return evService.getMontlyDetails(monthName, name);
     }
 }

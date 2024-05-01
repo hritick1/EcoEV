@@ -2,6 +2,7 @@ package com.system.EcoEV.services;
 
 import com.system.EcoEV.dto.EvDailyFinancesDto;
 import com.system.EcoEV.dto.EvMaintenanceDto;
+import com.system.EcoEV.entities.EvAllInOne;
 import com.system.EcoEV.entities.EvMaintenance;
 import com.system.EcoEV.lists.MaintenanceList;
 
@@ -13,4 +14,6 @@ public interface EvService {
    String getDueDates(String name);
    String getAllByName(String name);
    List<MaintenanceList> getAllMaintenance(String name);
+   void setMonthRepo(EvAllInOne evAllInOne);
+   String getMontlyDetails(String monthName,String name);
 }

@@ -5,11 +5,13 @@ import com.system.EcoEV.dto.EvMaintenanceDto;
 import com.system.EcoEV.entities.EvAllInOne;
 import com.system.EcoEV.entities.EvDailyFinances;
 import com.system.EcoEV.entities.EvMaintenance;
+import com.system.EcoEV.entities.EvMonth;
 import com.system.EcoEV.exception.CollectionNotFoundException;
 import com.system.EcoEV.lists.MaintenanceList;
 import com.system.EcoEV.repo.EvAllInOneRepo;
 import com.system.EcoEV.repo.EvDailyRepo;
 import com.system.EcoEV.repo.EvMaintenanceRepo;
+import com.system.EcoEV.repo.EvMonthRepo;
 import com.system.EcoEV.services.EvService;
 import com.system.EcoEV.utils.CommonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,9 @@ public class EvServiceImpl implements EvService {
     private EvAllInOneRepo evAllInOneRepo;
     @Autowired
     private EvMaintenanceRepo evMaintenanceRepo;
+
+    @Autowired
+    private EvMonthRepo evMonthRepo;
 
     @Override
     public String addEveryDayCollection(EvDailyFinancesDto evDailyFinancesDto, String name) {
@@ -75,6 +80,10 @@ public class EvServiceImpl implements EvService {
 
         evDailyRepo.save(evDailyFinances);
         evAllInOneRepo.save(evAllInOne);
+
+        if(CommonUtils.isLastDayOfMonth(evAllInOne.getDate())){
+            setMonthRepo(evAllInOne);
+        }
 
         return "Daily Paid: " + paid;
     }
@@ -122,7 +131,32 @@ public class EvServiceImpl implements EvService {
         return list;
 
     }
-}
+    public void setMonthRepo(EvAllInOne evAllInOne){
+        String date=evAllInOne.getDate();
+   int mm=Integer.parseInt(date.substring(5,7));
+   String month=CommonUtils.getMonthName(mm);
+        EvMonth evMonth=new EvMonth();
+        evMonth.setMonthName(month+date.substring(8,10));
+        evMonth.setDate(CommonUtils.getCurrentDate(new Date()));
+        evMonth.setName(evAllInOne.getName());
+        evMonth.setTotalIncome(evAllInOne.getTotalIncome());
+        evMonth.setTotalDue(evAllInOne.getTotalDue());
+        evMonth.setTotalServiceCost(evAllInOne.getTotalServiceCost());
 
+        evMonthRepo.save(evMonth);
+
+//        setting EvAllInOne to zero for next month calculation
+        evAllInOne.setTotalIncome(0);
+        evAllInOne.setTotalServiceCost(0);
+        evAllInOneRepo.save(evAllInOne);
+    }
+
+    @Override
+    public String getMontlyDetails(String monthName, String name) {
+        EvMonth evMonth=evMonthRepo.findByMonthNameAndName(monthName,name);
+        return "Month: "+evMonth.getMonthName()+"TotalDue: "+ evMonth.getTotalDue()+
+                "TotalIncome: "+ evMonth.getTotalIncome()+"TotalMaintenance: "+evMonth.getTotalServiceCost();
+    }
+}
 //yyyy-mm-dd
 //0123456789
