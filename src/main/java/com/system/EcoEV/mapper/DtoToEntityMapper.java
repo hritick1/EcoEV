@@ -16,4 +16,5 @@ public interface DtoToEntityMapper {
 //    EvAllInOne toEntity1(EvAllInOneDto dto);
 //    EvDailyFinances toEntity2(EvDailyFinancesDto dto);
 //    EvMaintenance toEntity2(EvMaintenanceDto dto);
+//    EvAllInOneDto toDto(EvAllInOne evAllInOne);
 }
