@@ -84,6 +84,10 @@ public class EvServiceImpl implements EvService {
         if(CommonUtils.isLastDayOfMonth(evAllInOne.getDate())){
             setMonthRepo(evAllInOne);
         }
+//Trying out testing
+//        if(CommonUtils.isLastDayOfMonth("2024-04-30")){
+//            setMonthRepo(evAllInOne);
+//        }
 
         return "Daily Paid: " + paid;
     }
@@ -101,11 +105,11 @@ public class EvServiceImpl implements EvService {
 
         log.info("{}", totalDays);
 
-        evAllInOne.setTotalDue(totalDays * 200 + prevDue);
-        evAllInOne.setDate(CommonUtils.getCurrentDate(new Date()));
-        evAllInOneRepo.save(evAllInOne);
+//        evAllInOne.setTotalDue(totalDays * 200 + prevDue);
+//        evAllInOne.setDate(CommonUtils.getCurrentDate(new Date()));
+//        evAllInOneRepo.save(evAllInOne);
 
-        return evAllInOne.getTotalDue();
+        return totalDays*200+prevDue;
     }
 
     @Override
@@ -113,7 +117,9 @@ public class EvServiceImpl implements EvService {
         String currentDate = CommonUtils.getCurrentDate(new Date());
         EvAllInOne evAllInOne = evAllInOneRepo.findById(name).orElseThrow(() -> new CollectionNotFoundException("Collection not found with name: " + name));
         String givenDate = evAllInOne.getDate();
-        return "Due From " + (Integer.parseInt(givenDate.substring(8, 10)) + 1) + "-" + givenDate.substring(5, 7) + " to " + currentDate.substring(8, 10) + "-" + currentDate.substring(5, 7) + " Amount:";
+        if(givenDate.equals(currentDate)&& evAllInOne.getTotalDue()==0) return "No Due";
+        else if(givenDate.equals(currentDate)&& evAllInOne.getTotalDue()!=0) return "Due";
+        return "Due From " + (Integer.parseInt(givenDate.substring(8, 10)) + 1) + "-" + givenDate.substring(5, 7) + " to " + currentDate.substring(8, 10) + "-" + currentDate.substring(5, 7) + " Amount";
     }
 
     @Override
@@ -136,7 +142,7 @@ public class EvServiceImpl implements EvService {
    int mm=Integer.parseInt(date.substring(5,7));
    String month=CommonUtils.getMonthName(mm);
         EvMonth evMonth=new EvMonth();
-        evMonth.setMonthName(month+date.substring(8,10));
+        evMonth.setMonthName(month.toLowerCase()+date.substring(2,4));
         evMonth.setDate(CommonUtils.getCurrentDate(new Date()));
         evMonth.setName(evAllInOne.getName());
         evMonth.setTotalIncome(evAllInOne.getTotalIncome());
@@ -154,8 +160,10 @@ public class EvServiceImpl implements EvService {
     @Override
     public String getMontlyDetails(String monthName, String name) {
         EvMonth evMonth=evMonthRepo.findByMonthNameAndName(monthName,name);
-        return "Month: "+evMonth.getMonthName()+"TotalDue: "+ evMonth.getTotalDue()+
-                "TotalIncome: "+ evMonth.getTotalIncome()+"TotalMaintenance: "+evMonth.getTotalServiceCost();
+        return "Month: " + evMonth.getMonthName() + "\n" +
+                "TotalDue: " + evMonth.getTotalDue() + "\n" +
+                "TotalIncome: " + evMonth.getTotalIncome() + "\n" +
+                "TotalMaintenance: " + evMonth.getTotalServiceCost() + "\n";
     }
 }
 //yyyy-mm-dd

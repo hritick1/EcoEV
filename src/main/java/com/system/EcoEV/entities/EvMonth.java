@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Document(collection = "MonthlyData")
 public class EvMonth implements Serializable {
     @Id
+    private String id;
     private String monthName;
 
     private String name;

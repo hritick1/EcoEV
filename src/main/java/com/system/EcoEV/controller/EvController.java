@@ -45,7 +45,7 @@ public class EvController {
     @GetMapping("/getDue/{name}")
     private String getDue(@PathVariable String name) {
         log.info("{}",name);
-        return evService.getDueDates(name)+evService.findAllDue(name);
+        return evService.getDueDates(name)+" : "+evService.findAllDue(name);
     }
     @GetMapping("/getAll/{name}")
     private String getTotalByName(@PathVariable String name){
