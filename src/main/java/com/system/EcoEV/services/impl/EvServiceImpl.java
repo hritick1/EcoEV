@@ -1,12 +1,12 @@
 package com.system.EcoEV.services.impl;
 
 import com.system.EcoEV.dto.EvDailyFinancesDto;
-import com.system.EcoEV.dto.EvMaintenanceDto;
 import com.system.EcoEV.entities.EvAllInOne;
 import com.system.EcoEV.entities.EvDailyFinances;
 import com.system.EcoEV.entities.EvMaintenance;
 import com.system.EcoEV.entities.EvMonth;
 import com.system.EcoEV.exception.CollectionNotFoundException;
+import com.system.EcoEV.lists.DailyFinancesList;
 import com.system.EcoEV.lists.MaintenanceList;
 import com.system.EcoEV.repo.EvAllInOneRepo;
 import com.system.EcoEV.repo.EvDailyRepo;
@@ -51,17 +51,17 @@ public class EvServiceImpl implements EvService {
         //setting Due
         int dailyPay = evDailyFinancesDto.getDailyPay();
         int due = findAllDue(name);
-        int paid=0;
+        int paid = 0;
         if (dailyPay > 200) {
             evDailyFinances.setDailyPay(200);
-            paid=200;
+            paid = 200;
             evAllInOne.setTotalDue(due - (dailyPay - 200));
         } else if (dailyPay < 200) {
             evAllInOne.setTotalDue(due + 200 - dailyPay);
-            paid=dailyPay;
-        } else{
+            paid = dailyPay;
+        } else {
             evDailyFinances.setDailyPay(200);
-        paid=200;
+            paid = 200;
         }
         //Setting maintenance
         EvMaintenance evMaintenance = new EvMaintenance();
@@ -81,7 +81,7 @@ public class EvServiceImpl implements EvService {
         evDailyRepo.save(evDailyFinances);
         evAllInOneRepo.save(evAllInOne);
 
-        if(CommonUtils.isLastDayOfMonth(evAllInOne.getDate())){
+        if (CommonUtils.isLastDayOfMonth(evAllInOne.getDate())) {
             setMonthRepo(evAllInOne);
         }
 //Trying out testing
@@ -109,7 +109,7 @@ public class EvServiceImpl implements EvService {
 //        evAllInOne.setDate(CommonUtils.getCurrentDate(new Date()));
 //        evAllInOneRepo.save(evAllInOne);
 
-        return totalDays*200+prevDue;
+        return totalDays * 200 + prevDue;
     }
 
     @Override
@@ -117,32 +117,33 @@ public class EvServiceImpl implements EvService {
         String currentDate = CommonUtils.getCurrentDate(new Date());
         EvAllInOne evAllInOne = evAllInOneRepo.findById(name).orElseThrow(() -> new CollectionNotFoundException("Collection not found with name: " + name));
         String givenDate = evAllInOne.getDate();
-        if(givenDate.equals(currentDate)&& evAllInOne.getTotalDue()==0) return "No Due";
-        else if(givenDate.equals(currentDate)&& evAllInOne.getTotalDue()!=0) return "Due";
+        if (givenDate.equals(currentDate) && evAllInOne.getTotalDue() == 0) return "No Due";
+        else if (givenDate.equals(currentDate) && evAllInOne.getTotalDue() != 0) return "Due";
         return "Due From " + (Integer.parseInt(givenDate.substring(8, 10)) + 1) + "-" + givenDate.substring(5, 7) + " to " + currentDate.substring(8, 10) + "-" + currentDate.substring(5, 7) + " Amount";
     }
 
     @Override
     public String getAllByName(String name) {
-        EvAllInOne evAllInOne=evAllInOneRepo.findById(name).orElseThrow(()->new CollectionNotFoundException("Collection not found with name: "+name));
-        return "Name: "+evAllInOne.getName()+" Total-Profit: "+evAllInOne.getTotalIncome()+" Total-Due: "+evAllInOne.getTotalDue()+" Total-Maintenance: "+evAllInOne.getTotalServiceCost();
+        EvAllInOne evAllInOne = evAllInOneRepo.findById(name).orElseThrow(() -> new CollectionNotFoundException("Collection not found with name: " + name));
+        return "Name: " + evAllInOne.getName() + " Total-Profit: " + evAllInOne.getTotalIncome() + " Total-Due: " + evAllInOne.getTotalDue() + " Total-Maintenance: " + evAllInOne.getTotalServiceCost();
     }
 
     @Override
     public List<MaintenanceList> getAllMaintenance(String name) {
-        List<EvMaintenance> evMaintenance=evMaintenanceRepo.findByName(name);
-        List<MaintenanceList> list= evMaintenance.stream()
-                .map((ev)->new MaintenanceList(ev.getPartName(),ev.getCostOfService(),ev.getDate()))
+        List<EvMaintenance> evMaintenance = evMaintenanceRepo.findByName(name);
+        List<MaintenanceList> list = evMaintenance.stream()
+                .map((ev) -> new MaintenanceList(ev.getPartName(), ev.getCostOfService(), ev.getDate()))
                 .collect(Collectors.toList());
         return list;
 
     }
-    public void setMonthRepo(EvAllInOne evAllInOne){
-        String date=evAllInOne.getDate();
-   int mm=Integer.parseInt(date.substring(5,7));
-   String month=CommonUtils.getMonthName(mm);
-        EvMonth evMonth=new EvMonth();
-        evMonth.setMonthName(month.toLowerCase()+date.substring(2,4));
+
+    public void setMonthRepo(EvAllInOne evAllInOne) {
+        String date = evAllInOne.getDate();
+        int mm = Integer.parseInt(date.substring(5, 7));
+        String month = CommonUtils.getMonthName(mm);
+        EvMonth evMonth = new EvMonth();
+        evMonth.setMonthName(month.toLowerCase() + date.substring(2, 4));
         evMonth.setDate(CommonUtils.getCurrentDate(new Date()));
         evMonth.setName(evAllInOne.getName());
         evMonth.setTotalIncome(evAllInOne.getTotalIncome());
@@ -159,11 +160,18 @@ public class EvServiceImpl implements EvService {
 
     @Override
     public String getMontlyDetails(String monthName, String name) {
-        EvMonth evMonth=evMonthRepo.findByMonthNameAndName(monthName,name);
+        EvMonth evMonth = evMonthRepo.findByMonthNameAndName(monthName, name);
         return "Month: " + evMonth.getMonthName() + "\n" +
                 "TotalDue: " + evMonth.getTotalDue() + "\n" +
                 "TotalIncome: " + evMonth.getTotalIncome() + "\n" +
                 "TotalMaintenance: " + evMonth.getTotalServiceCost() + "\n";
+    }
+
+    @Override
+    public List<DailyFinancesList> getDailyFinancesByName(String name) {
+        List<EvDailyFinances> evDailyFinances = evDailyRepo.findByName(name);
+        List<DailyFinancesList> list = evDailyFinances.stream().map((ev) -> new DailyFinancesList(ev.getName(), ev.getDailyPay(), ev.getDate())).collect(Collectors.toList());
+        return list;
     }
 }
 //yyyy-mm-dd

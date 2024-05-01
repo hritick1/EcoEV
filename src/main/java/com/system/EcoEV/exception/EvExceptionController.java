@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class EvExceptionController {
     @ExceptionHandler(CollectionNotFoundException.class)
-    public ResponseEntity<Object> exception(CollectionNotFoundException exception){
+    public ResponseEntity<Object> exception(CollectionNotFoundException exception) {
         return new ResponseEntity<Object>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 

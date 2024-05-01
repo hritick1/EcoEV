@@ -12,9 +12,9 @@ import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "Spring")
 public interface DtoToEntityMapper {
-    DtoToEntityMapper instance= Mappers.getMapper(DtoToEntityMapper.class);
-    EvAllInOne toEntity1(EvAllInOneDto dto);
-    EvDailyFinances toEntity2(EvDailyFinancesDto dto);
+//    DtoToEntityMapper instance= Mappers.getMapper(DtoToEntityMapper.class);
+//    EvAllInOne toEntity1(EvAllInOneDto dto);
+//    EvDailyFinances toEntity2(EvDailyFinancesDto dto);
 //    EvMaintenance toEntity2(EvMaintenanceDto dto);
 //    EvAllInOneDto toDto(EvAllInOne evAllInOne);
 }

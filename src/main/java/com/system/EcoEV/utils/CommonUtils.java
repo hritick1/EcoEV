@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.YearMonth;
 import java.util.Date;
+
 @Slf4j
 public class CommonUtils {
     public static String getCurrentDate(Date date) {
@@ -39,15 +40,16 @@ public class CommonUtils {
         String month = "wrong";
         DateFormatSymbols dfs = new DateFormatSymbols();
         String[] months = dfs.getMonths();
-        if(mm>=1 &&mm<=12)
-        month = months[mm-1];
+        if (mm >= 1 && mm <= 12)
+            month = months[mm - 1];
         return month;
     }
-    public static boolean isLastDayOfMonth(String date){
-        YearMonth yearMonth=YearMonth.of(Integer.parseInt(date.substring(0,4)),Integer.parseInt(date.substring(5,7)));
-        int maxDayOfMonth=yearMonth.lengthOfMonth();
-        log.info("{}",maxDayOfMonth);
-        if(maxDayOfMonth==Integer.parseInt(date.substring(8,10))) return true;
+
+    public static boolean isLastDayOfMonth(String date) {
+        YearMonth yearMonth = YearMonth.of(Integer.parseInt(date.substring(0, 4)), Integer.parseInt(date.substring(5, 7)));
+        int maxDayOfMonth = yearMonth.lengthOfMonth();
+        log.info("{}", maxDayOfMonth);
+        if (maxDayOfMonth == Integer.parseInt(date.substring(8, 10))) return true;
         return false;
     }
 }
