@@ -52,18 +52,25 @@ public class EvServiceImpl implements EvService {
         //setting Due
         int dailyPay = evDailyFinancesDto.getDailyPay();
         int due = findAllDue(name);
-        int paid = 0;
-        if (dailyPay > 200) {
+//        int paid = 0;
+        if(dailyPay>=200){
             evDailyFinances.setDailyPay(200);
-            paid = 200;
-            evAllInOne.setTotalDue(due - (dailyPay - 200));
-        } else if (dailyPay < 200) {
-            evAllInOne.setTotalDue(due + 200 - dailyPay);
-            paid = dailyPay;
-        } else {
-            evDailyFinances.setDailyPay(200);
-            paid = 200;
         }
+        else if(dailyPay<200){
+            evDailyFinances.setDailyPay(dailyPay);
+        }
+        evAllInOne.setTotalDue(due-dailyPay);
+//        if (dailyPay > 200) {
+//            evDailyFinances.setDailyPay(200);
+//            paid = 200;
+//            evAllInOne.setTotalDue(due - (dailyPay - 200));
+//        } else if (dailyPay < 200) {
+//            evAllInOne.setTotalDue(due + 200 - dailyPay);
+//            paid = dailyPay;
+//        } else {
+//            evDailyFinances.setDailyPay(200);
+//            paid = 200;
+//        }
         //Setting maintenance
         EvMaintenance evMaintenance = new EvMaintenance();
         if (evDailyFinancesDto.getPartsAdded() != null) {
@@ -90,7 +97,7 @@ public class EvServiceImpl implements EvService {
 //            setMonthRepo(evAllInOne);
 //        }
 
-        return "Daily Paid: " + paid;
+        return "Daily Paid: " + evDailyFinances.getDailyPay();
     }
 
 
