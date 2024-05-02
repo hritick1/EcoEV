@@ -9,6 +9,7 @@ public class AllLists {
     private int totalIncome;
 
     private int totalDue;
+    private int totalNotPaid;
 
     private int totalServiceCost;
 

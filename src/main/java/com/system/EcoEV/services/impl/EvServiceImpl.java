@@ -144,6 +144,7 @@ public class EvServiceImpl implements EvService {
         AllLists allLists=new AllLists();
         allLists.setName(evAllInOne.getName());
         allLists.setDate(evAllInOne.getDate());
+        allLists.setTotalNotPaid(evAllInOne.getTotalNotPaid());
         allLists.setTotalDue(evAllInOne.getTotalDue());
         allLists.setTotalIncome(evAllInOne.getTotalIncome());
         allLists.setTotalServiceCost(evAllInOne.getTotalServiceCost());
