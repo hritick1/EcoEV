@@ -20,5 +20,7 @@ public class EvAllInOne implements Serializable {
 
     private int totalServiceCost;
 
+    private int totalNotPaid;
+
     private String date;
 }

@@ -8,5 +8,6 @@ import lombok.Data;
 public class DailyFinancesList {
     private String name;
     private int dailyPay;
+    private int notPaid;
     private String date;
 }

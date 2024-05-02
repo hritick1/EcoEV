@@ -12,14 +12,10 @@ public class EvMonth implements Serializable {
     @Id
     private String id;
     private String monthName;
-
     private String name;
-
     private int totalIncome;
-
+    private int totalNotPaid;
     private int totalDue;
-
     private int totalServiceCost;
-
     private String date;
 }

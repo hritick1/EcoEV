@@ -8,6 +8,7 @@ public class EvDailyFinancesDto {
     private String id;
     private String name;
     private int dailyPay;
+    private int notPaid;
     private int maintenance;
     private String partsAdded;
     private String date;
