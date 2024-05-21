@@ -15,6 +15,8 @@ public class EvDailyFinances implements Serializable {
     private String name;
     private int dailyPay;
     private int notPaid;
+
+    private int due;
     private String date;
 
 }

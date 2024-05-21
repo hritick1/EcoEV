@@ -1,10 +1,13 @@
 package com.system.EcoEV.controller;
 
+import com.sun.tools.javac.Main;
 import com.system.EcoEV.dto.EvDailyFinancesDto;
+import com.system.EcoEV.entities.EvMaintenance;
 import com.system.EcoEV.entities.EvMonth;
 import com.system.EcoEV.lists.AllLists;
 import com.system.EcoEV.lists.DailyFinancesList;
 import com.system.EcoEV.lists.MaintenanceList;
+import com.system.EcoEV.repo.EvMaintenanceRepo;
 import com.system.EcoEV.services.EvService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import java.util.List;
 public class EvController {
     @Autowired
     private EvService evService;
+    @Autowired
+    private EvMaintenanceRepo evMaintenanceRepo;
 
     @PostMapping("addDaily/{name}")
     private String addDailyFinances(@RequestBody EvDailyFinancesDto dto, @PathVariable String name) {
@@ -66,5 +71,9 @@ public class EvController {
     @GetMapping("getMonthly/{monthName}/{name}")
     private EvMonth getMonthlyDetails(@PathVariable String monthName, @PathVariable String name) {
         return evService.getMontlyDetails(monthName, name);
+    }
+    @PostMapping("/")
+    private EvMaintenance addServiceCost(@RequestBody EvMaintenance maintenanceList){
+        return evMaintenanceRepo.save(maintenanceList);
     }
 }

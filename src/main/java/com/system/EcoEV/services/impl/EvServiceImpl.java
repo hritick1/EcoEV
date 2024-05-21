@@ -39,10 +39,10 @@ public class EvServiceImpl implements EvService {
     @Override
     public String addEveryDayCollection(EvDailyFinancesDto evDailyFinancesDto, String name) {
 
-//        //remove only for 1st use
+        //remove only for 1st use
 //        EvAllInOne evAllInOne1=new EvAllInOne();
 //        evAllInOne1.setName(name);
-//        evAllInOne1.setDate(CommonUtils.getCurrentDate(new Date()));
+//        evAllInOne1.setDate("2024-05-01");
 //        evAllInOneRepo.save(evAllInOne1);
 
 
@@ -61,13 +61,15 @@ public class EvServiceImpl implements EvService {
        evDailyFinances.setNotPaid(evDailyFinancesDto.getNotPaid());
         }
 //        int paid = 0;
-        if(dailyPay>=200){
-            evDailyFinances.setDailyPay(200);
-        }
-        else if(dailyPay<200){
-            evDailyFinances.setDailyPay(dailyPay);
-        }
+//        if(dailyPay>=200){
+//            evDailyFinances.setDailyPay(200);
+//        }
+//        else if(dailyPay<200){
+//            evDailyFinances.setDailyPay(dailyPay);
+//        }
+        evDailyFinances.setDailyPay(dailyPay);
         evAllInOne.setTotalDue(due-dailyPay);
+        evDailyFinances.setDue(evAllInOne.getTotalDue());
 //        if (dailyPay > 200) {
 //            evDailyFinances.setDailyPay(200);
 //            paid = 200;
@@ -133,9 +135,14 @@ public class EvServiceImpl implements EvService {
         String currentDate = CommonUtils.getCurrentDate(new Date());
         EvAllInOne evAllInOne = evAllInOneRepo.findById(name).orElseThrow(() -> new CollectionNotFoundException("Collection not found with name: " + name));
         String givenDate = evAllInOne.getDate();
-        if (givenDate.equals(currentDate) && evAllInOne.getTotalDue() == 0) return "No Due";
-        else if (givenDate.equals(currentDate) && evAllInOne.getTotalDue() != 0) return "Due";
-        return "Due From " + (Integer.parseInt(givenDate.substring(8, 10)) + 1) + "-" + givenDate.substring(5, 7) + " to " + currentDate.substring(8, 10) + "-" + currentDate.substring(5, 7) + " Amount";
+//        if (givenDate.equals(currentDate) && evAllInOne.getTotalDue() == 0) return "No Due";
+//        else if (givenDate.equals(currentDate) && evAllInOne.getTotalDue() != 0) return "Due";
+//        return "Due From " + (Integer.parseInt(givenDate.substring(8, 10)) + 1) + "-" + givenDate.substring(5, 7) + " to " + currentDate.substring(8, 10) + "-" + currentDate.substring(5, 7) + " Amount";
+  if(findAllDue(name)==0) return "No Dues Pending";
+   else{
+      return "Due from: "+(Integer.parseInt(givenDate.substring(8, 10)))+"- "+givenDate.substring(5, 7) + " to " + currentDate.substring(8, 10) + "-" + currentDate.substring(5, 7) + " Amount";
+  }
+
     }
 
     @Override
