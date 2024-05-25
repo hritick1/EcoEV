@@ -10,4 +10,5 @@ public class DailyFinancesList {
     private int dailyPay;
     private int notPaid;
     private String date;
+    private int due;
 }

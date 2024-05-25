@@ -199,7 +199,7 @@ public class EvServiceImpl implements EvService {
     @Override
     public List<DailyFinancesList> getDailyFinancesByName(String name) {
         List<EvDailyFinances> evDailyFinances = evDailyRepo.findByName(name);
-        List<DailyFinancesList> list = evDailyFinances.stream().map((ev) -> new DailyFinancesList(ev.getName(), ev.getDailyPay(),ev.getNotPaid(), ev.getDate())).collect(Collectors.toList());
+        List<DailyFinancesList> list = evDailyFinances.stream().map((ev) -> new DailyFinancesList(ev.getName(), ev.getDailyPay(),ev.getNotPaid(), ev.getDate(),ev.getDue())).collect(Collectors.toList());
         return list;
     }
 }

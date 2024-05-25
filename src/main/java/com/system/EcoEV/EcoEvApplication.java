@@ -17,7 +17,7 @@ public class EcoEvApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("https://ecoev-hritick1s-projects.vercel.app");
+				registry.addMapping("/**").allowedOrigins("https://ecoev-hritick1s-projects.vercel.app","http://localhost:3000");
 			}
 		};
 	}
