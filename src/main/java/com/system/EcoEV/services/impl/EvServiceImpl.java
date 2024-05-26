@@ -186,10 +186,10 @@ public class EvServiceImpl implements EvService {
         evMonthRepo.save(evMonth);
 
 //        setting EvAllInOne to zero for next month calculation
-        evAllInOne.setTotalIncome(0);
-        evAllInOne.setTotalServiceCost(0);
-        evAllInOne.setTotalNotPaid(0);
-        evAllInOneRepo.save(evAllInOne);
+//        evAllInOne.setTotalIncome(0);
+//        evAllInOne.setTotalServiceCost(0);
+//        evAllInOne.setTotalNotPaid(0);
+//        evAllInOneRepo.save(evAllInOne);
     }
 
     @Override

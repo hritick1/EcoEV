@@ -3,11 +3,13 @@ package com.system.EcoEV.controller;
 import com.sun.tools.javac.Main;
 import com.system.EcoEV.dto.EvDailyFinancesDto;
 import com.system.EcoEV.dto.TotalDataDto;
+import com.system.EcoEV.entities.EvAllInOne;
 import com.system.EcoEV.entities.EvMaintenance;
 import com.system.EcoEV.entities.EvMonth;
 import com.system.EcoEV.lists.AllLists;
 import com.system.EcoEV.lists.DailyFinancesList;
 import com.system.EcoEV.lists.MaintenanceList;
+import com.system.EcoEV.repo.EvAllInOneRepo;
 import com.system.EcoEV.repo.EvMaintenanceRepo;
 import com.system.EcoEV.services.EvService;
 import com.system.EcoEV.utils.CommonUtils;
@@ -23,6 +25,8 @@ import java.util.List;
 public class EvController {
     @Autowired
     private EvService evService;
+    @Autowired
+    private EvAllInOneRepo evAllInOneRepo;
 
     @PostMapping("addDaily/{name}")
     private String addDailyFinances(@RequestBody EvDailyFinancesDto dto, @PathVariable String name) {
@@ -61,5 +65,10 @@ public class EvController {
         return evService.getNetResults(monthName);
    }
 
+//   @GetMapping("/month")
+//    public void month(){
+//        EvAllInOne evAllInOne=evAllInOneRepo.findById("Gathu").get();
+//        evService.setMonthRepo(evAllInOne);
+//   }
 
 }
