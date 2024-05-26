@@ -1,6 +1,7 @@
 package com.system.EcoEV.services.impl;
 
 import com.system.EcoEV.dto.EvDailyFinancesDto;
+import com.system.EcoEV.dto.TotalDataDto;
 import com.system.EcoEV.entities.EvAllInOne;
 import com.system.EcoEV.entities.EvDailyFinances;
 import com.system.EcoEV.entities.EvMaintenance;
@@ -15,6 +16,7 @@ import com.system.EcoEV.repo.EvMaintenanceRepo;
 import com.system.EcoEV.repo.EvMonthRepo;
 import com.system.EcoEV.services.EvService;
 import com.system.EcoEV.utils.CommonUtils;
+import io.micrometer.common.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -202,6 +204,42 @@ public class EvServiceImpl implements EvService {
         List<DailyFinancesList> list = evDailyFinances.stream().map((ev) -> new DailyFinancesList(ev.getName(), ev.getDailyPay(),ev.getNotPaid(), ev.getDate(),ev.getDue())).collect(Collectors.toList());
         return list;
     }
+
+    @Override
+    public TotalDataDto getNetResults(String monthName) {
+        if(monthName.equals("current")){
+            List<EvAllInOne> totalEv=evAllInOneRepo.findAll();
+            return findNetResults(totalEv);
+        }
+        List<EvMonth> totalEv=evMonthRepo.findAll();
+        return findNetResultsMonthly(totalEv);
+
+    }
+
+    public TotalDataDto findNetResults(List<EvAllInOne> totalEv){
+        int totalPaid=totalEv.stream().mapToInt(EvAllInOne::getTotalIncome).sum();
+        int totalNotPaid=totalEv.stream().mapToInt(EvAllInOne::getTotalNotPaid).sum();
+        int totalServiceCost=totalEv.stream().mapToInt(EvAllInOne::getTotalServiceCost).sum();
+        TotalDataDto totalDataDto=new TotalDataDto();
+        totalDataDto.setTotalPaid(totalPaid);
+        totalDataDto.setTotalNotPaid(totalNotPaid);
+        totalDataDto.setTotalServiceCost(totalServiceCost);
+        totalDataDto.setTotalProfit(totalPaid-totalServiceCost);
+        return totalDataDto;
+    }
+    public TotalDataDto findNetResultsMonthly(List<EvMonth> totalEv){
+        int totalPaid=totalEv.stream().mapToInt(EvMonth::getTotalIncome).sum();
+        int totalNotPaid=totalEv.stream().mapToInt(EvMonth::getTotalNotPaid).sum();
+        int totalServiceCost=totalEv.stream().mapToInt(EvMonth::getTotalServiceCost).sum();
+        TotalDataDto totalDataDto=new TotalDataDto();
+        totalDataDto.setTotalPaid(totalPaid);
+        totalDataDto.setTotalNotPaid(totalNotPaid);
+        totalDataDto.setTotalServiceCost(totalServiceCost);
+        totalDataDto.setTotalProfit(totalPaid-totalServiceCost);
+        return totalDataDto;
+    }
+
+
 }
 //yyyy-mm-dd
 //0123456789

@@ -1,6 +1,7 @@
 package com.system.EcoEV.services;
 
 import com.system.EcoEV.dto.EvDailyFinancesDto;
+import com.system.EcoEV.dto.TotalDataDto;
 import com.system.EcoEV.entities.EvAllInOne;
 import com.system.EcoEV.entities.EvMonth;
 import com.system.EcoEV.lists.AllLists;
@@ -25,4 +26,6 @@ public interface EvService {
     EvMonth getMontlyDetails(String monthName, String name);
 
     List<DailyFinancesList> getDailyFinancesByName(String name);
+
+    TotalDataDto getNetResults(String monthName);
 }
